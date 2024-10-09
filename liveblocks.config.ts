@@ -6,6 +6,8 @@ declare global {
     Presence: {
       // Example, real-time cursor coordinates
       // cursor: { x: number; y: number };
+      nickname: string;
+      id: string;
     };
 
     // The Storage tree for the room, for useMutation, useStorage, etc.
