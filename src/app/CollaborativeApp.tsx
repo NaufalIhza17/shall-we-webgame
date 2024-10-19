@@ -61,7 +61,6 @@ export function CollaborativeApp({ roomId }: { roomId: string }) {
           </li>
         )}
 
-        {/* Display other users */}
         {others.map((other) => (
           <li
             key={other.connectionId}
