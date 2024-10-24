@@ -10,6 +10,8 @@ import Link from "next/link";
 
 export default function CreatePage() {
   const [nickname, setNickname] = useState("");
+  const [gameMode, setGameMode] = useState("");
+  const [maxCapacity, setMaxCapacity] = useState(1);
   const [roomId, setRoomId] = useState("");
   const [joined, setJoined] = useState(false);
 
@@ -45,6 +47,28 @@ export default function CreatePage() {
               onChange={(e) => setNickname(e.target.value)}
               className="w-full bg-transparent outline-none"
             />
+          </div>
+
+          <div className="w-full flex justify-between">
+            <div className="w-[170px] p-5 rounded-[10px] bg-[#4A4A4A]">
+              <select
+                value={gameMode}
+                onChange={(e) => setGameMode(e.target.value)}
+                className="w-full bg-transparent outline-none"
+              >
+                <option value="" disabled>Game Mode</option>
+                <option value="quick-choose" className="text-black">Quick Choose</option>
+              </select>
+            </div>
+            <div className="w-[120px] p-5 rounded-[10px] bg-[#4A4A4A]">
+              <input
+                type="number"
+                placeholder="Max. Party"
+                value={maxCapacity}
+                onChange={(e) => setMaxCapacity(Number(e.target.value))}
+                className="w-full bg-transparent outline-none"
+              />
+            </div>
           </div>
 
           <button
