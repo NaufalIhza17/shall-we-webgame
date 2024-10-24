@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Room } from "../Room";
 import { CollaborativeApp } from "../CollaborativeApp";
 import { v4 as uuidv4 } from "uuid";
@@ -15,17 +15,38 @@ export default function CreatePage() {
   const [roomId, setRoomId] = useState("");
   const [joined, setJoined] = useState(false);
 
+  useEffect(() => {
+    const savedNickname = localStorage.getItem("nickname");
+    const savedRoomId = localStorage.getItem("roomId");
+    const savedJoined = localStorage.getItem("joined") === "true";
+
+    if (savedJoined && savedRoomId) {
+      setNickname(savedNickname || "");
+      setRoomId(savedRoomId);
+      setJoined(true);
+    }
+  }, []);
+
   const handleCreateRoom = () => {
     if (nickname.trim() !== "") {
       const newRoomId = uuidv4();
       setRoomId(newRoomId);
       setJoined(true);
+
+      localStorage.setItem("nickname", nickname);
+      localStorage.setItem("roomId", newRoomId);
+      localStorage.setItem("joined", "true");
     }
   };
 
   if (joined && roomId) {
     return (
-      <Room roomId={roomId} nickname={nickname}>
+      <Room
+        roomId={roomId}
+        nickname={nickname}
+        isCreator
+        maxCapacity={maxCapacity}
+      >
         <CollaborativeApp roomId={roomId} />
       </Room>
     );
@@ -56,8 +77,12 @@ export default function CreatePage() {
                 onChange={(e) => setGameMode(e.target.value)}
                 className="w-full bg-transparent outline-none"
               >
-                <option value="" disabled>Game Mode</option>
-                <option value="quick-choose" className="text-black">Quick Choose</option>
+                <option value="" disabled>
+                  Game Mode
+                </option>
+                <option value="quick-choose" className="text-black">
+                  Quick Choose
+                </option>
               </select>
             </div>
             <div className="w-[120px] p-5 rounded-[10px] bg-[#4A4A4A]">

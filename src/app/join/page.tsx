@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Room } from "../Room";
 import { CollaborativeApp } from "../CollaborativeApp";
 import Header from "@/components/Header";
@@ -12,8 +12,21 @@ export default function JoinPage() {
   const [roomId, setRoomId] = useState("");
   const [joined, setJoined] = useState(false);
 
+  useEffect(() => {
+    const storedRoomId = localStorage.getItem("liveblocksRoomId");
+    const storedNickname = localStorage.getItem("liveblocksNickname");
+
+    if (storedRoomId && storedNickname) {
+      setRoomId(storedRoomId);
+      setNickname(storedNickname);
+      setJoined(true);
+    }
+  }, []);
+
   const handleJoinRoom = () => {
     if (nickname.trim() !== "" && roomId.trim() !== "") {
+      localStorage.setItem("liveblocksRoomId", roomId);
+      localStorage.setItem("liveblocksNickname", nickname);
       setJoined(true);
     }
   };
