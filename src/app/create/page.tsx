@@ -1,24 +1,25 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Room } from "../Room";
-import { CollaborativeApp } from "../CollaborativeApp";
+import QuickChoose from "../games/quick-choose/page";
 import { v4 as uuidv4 } from "uuid";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function CreatePage() {
   const [nickname, setNickname] = useState("");
   const [gameMode, setGameMode] = useState("");
-  const [maxCapacity, setMaxCapacity] = useState(1);
+  const [maxCapacity, setMaxCapacity] = useState(2);
   const [roomId, setRoomId] = useState("");
   const [joined, setJoined] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    const savedNickname = localStorage.getItem("nickname");
-    const savedRoomId = localStorage.getItem("roomId");
-    const savedJoined = localStorage.getItem("joined") === "true";
+    const savedNickname = sessionStorage.getItem("nickname");
+    const savedRoomId = sessionStorage.getItem("roomId");
+    const savedJoined = sessionStorage.getItem("joined") === "true";
 
     if (savedJoined && savedRoomId) {
       setNickname(savedNickname || "");
@@ -33,24 +34,29 @@ export default function CreatePage() {
       setRoomId(newRoomId);
       setJoined(true);
 
-      localStorage.setItem("nickname", nickname);
-      localStorage.setItem("roomId", newRoomId);
-      localStorage.setItem("joined", "true");
+      sessionStorage.setItem("liveblocksNickname", nickname);
+      sessionStorage.setItem("liveblocksRoomId", newRoomId);
     }
   };
 
-  if (joined && roomId) {
-    return (
-      <Room
-        roomId={roomId}
-        nickname={nickname}
-        isCreator
-        maxCapacity={maxCapacity}
-      >
-        <CollaborativeApp roomId={roomId} />
-      </Room>
-    );
-  }
+  const handleRedirect = () => {
+    const query = new URLSearchParams({
+      roomId,
+      nickname,
+      isCreator: String(true),
+      maxCapacity: String(maxCapacity),
+    }).toString();
+
+    if (joined && roomId) {
+      router.push(`/games/quick-choose?${query}`);
+    }
+  };
+
+  useEffect(() => {
+    if (joined && roomId) {
+      handleRedirect();
+    }
+  }, [joined, roomId]);
 
   return (
     <div className="flex flex-col gap-10 justify-between h-full w-full">
@@ -90,7 +96,14 @@ export default function CreatePage() {
                 type="number"
                 placeholder="Max. Party"
                 value={maxCapacity}
-                onChange={(e) => setMaxCapacity(Number(e.target.value))}
+                onChange={(e) => {
+                  const value = Number(e.target.value);
+                  if (value >= 2 && value <= 9) {
+                    setMaxCapacity(value);
+                  }
+                }}
+                min="2"
+                max="9"
                 className="w-full bg-transparent outline-none"
               />
             </div>

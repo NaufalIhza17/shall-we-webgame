@@ -2,11 +2,11 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="max-w-[304px] w-full mx-auto flex justify-between items-center">
+    <header className="max-w-[304px] w-full mx-auto flex justify-center items-center">
       <button className="">
         <svg
-          width="20px"
-          height="20px"
+          width="28px"
+          height="28px"
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -28,9 +28,9 @@ export default function Header() {
           </g>
         </svg>
       </button>
-      <Link href={""}>
+      {/* <Link href={""}>
         <p className="underline text-xs">send feedback</p>
-      </Link>
+      </Link> */}
     </header>
   );
 }

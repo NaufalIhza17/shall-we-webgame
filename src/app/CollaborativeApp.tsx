@@ -3,9 +3,23 @@
 import { useOthers, useSelf, useStorage } from "@liveblocks/react/suspense";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 type CollaborativeAppProps = {
   roomId: string;
+};
+
+const handleLeaveRoom = () => {
+  return new Promise<void>((resolve, reject) => {
+    try {
+      sessionStorage.removeItem("liveblocksNickname");
+      sessionStorage.removeItem("liveblocksRoomId");
+
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
+  });
 };
 
 export function CollaborativeApp({ roomId }: CollaborativeAppProps) {
@@ -14,6 +28,7 @@ export function CollaborativeApp({ roomId }: CollaborativeAppProps) {
   const self = useSelf();
   const [copied, setCopied] = useState(false);
   const currentParticipants = others.length + 1;
+  const router = useRouter();
 
   useEffect(() => {
     console.log("number of players in the room: " + currentParticipants);
@@ -28,6 +43,18 @@ export function CollaborativeApp({ roomId }: CollaborativeAppProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
+  };
+
+  const leaveRoom = () => {
+    toast
+      .promise(handleLeaveRoom(), {
+        loading: "Removing...",
+        success: <b>You left the room!</b>,
+        error: <b>There is a problem.</b>,
+      })
+      .then(() => {
+        router.push("/");
+      });
   };
 
   return (
@@ -69,7 +96,7 @@ export function CollaborativeApp({ roomId }: CollaborativeAppProps) {
         {copied && <span className="text-sm text-green-500">Copied!</span>}
       </div>
       <div className="flex gap-2">
-        <span>Max {maxCapacity}</span> | 
+        <span>Max {maxCapacity}</span> |
         <span>Current {currentParticipants}</span>
       </div>
       <ul className="flex gap-2">
@@ -93,6 +120,12 @@ export function CollaborativeApp({ roomId }: CollaborativeAppProps) {
           </li>
         ))}
       </ul>
+      <button
+        onClick={leaveRoom}
+        className="px-3 py-2 rounded-md bg-red-800 hover:bg-red-900 active:bg-red-700 text-white"
+      >
+        <span>leave</span>
+      </button>
     </div>
   );
 }

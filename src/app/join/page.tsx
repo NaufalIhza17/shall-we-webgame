@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Room } from "../Room";
-import { CollaborativeApp } from "../CollaborativeApp";
+import { useRouter } from "next/navigation";
+import QuickChoose from "../games/quick-choose/page";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -11,10 +11,11 @@ export default function JoinPage() {
   const [nickname, setNickname] = useState("");
   const [roomId, setRoomId] = useState("");
   const [joined, setJoined] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    const storedRoomId = localStorage.getItem("liveblocksRoomId");
-    const storedNickname = localStorage.getItem("liveblocksNickname");
+    const storedRoomId = sessionStorage.getItem("liveblocksRoomId");
+    const storedNickname = sessionStorage.getItem("liveblocksNickname");
 
     if (storedRoomId && storedNickname) {
       setRoomId(storedRoomId);
@@ -25,19 +26,27 @@ export default function JoinPage() {
 
   const handleJoinRoom = () => {
     if (nickname.trim() !== "" && roomId.trim() !== "") {
-      localStorage.setItem("liveblocksRoomId", roomId);
-      localStorage.setItem("liveblocksNickname", nickname);
-      setJoined(true);
+      sessionStorage.setItem("liveblocksRoomId", roomId);
+      sessionStorage.setItem("liveblocksNickname", nickname);
     }
   };
 
-  if (joined && roomId) {
-    return (
-      <Room roomId={roomId} nickname={nickname}>
-        <CollaborativeApp roomId={roomId} />
-      </Room>
-    );
-  }
+  const handleRedirect = () => {
+    const query = new URLSearchParams({
+      roomId,
+      nickname
+    }).toString();
+
+    if (joined && roomId) {
+      router.push(`/games/quick-choose?${query}`);
+    }
+  };
+
+  useEffect(() => {
+    if (joined && roomId) {
+      handleRedirect();
+    }
+  }, [joined, roomId]);
 
   return (
     <div className="flex flex-col gap-10 justify-between h-full w-full">
