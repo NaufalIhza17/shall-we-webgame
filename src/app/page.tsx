@@ -12,14 +12,14 @@ export default function Home() {
       <div className="flex flex-col gap-[34px] justify-center items-center">
         <h1 className="text-5xl text-cst-gray">Shall We</h1>
         <div className="flex flex-col gap-3">
-          <Link href={'/join'}>
+          <Link href={'/pages/join'}>
             <button
               className="w-[200px] py-5 bg-[#4A4A4A] hover:bg-white transition-colors rounded-[20px] text-center"
             >
               <span className="uppercase text-[#989898]">Join Room</span>
             </button>
           </Link>
-          <Link href={'/create'}>
+          <Link href={'/pages/create'}>
             <button
               className="w-[200px] py-5 bg-[#4A4A4A] hover:bg-white transition-colors rounded-[20px] text-center"
               >

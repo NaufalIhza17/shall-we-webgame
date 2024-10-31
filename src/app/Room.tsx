@@ -31,7 +31,7 @@ export function Room({
   return (
     <LiveblocksProvider
       publicApiKey={
-        process.env.NEXT_PUBLIC_LIVEBLOCKS_API_KEY || "your_api_key_here"
+        process.env.NEXT_PUBLIC_LIVEBLOCKS_API_KEY || ""
       }
     >
       <RoomProvider
@@ -40,11 +40,9 @@ export function Room({
         initialStorage={{ maxCapacity }}
       >
         <ClientSideSuspense fallback={<div>Loading…</div>}>
-          <RoomContent
-            children={children}
-            maxCapacity={maxCapacity}
-            isCreator={isCreator}
-          />
+          <RoomContent maxCapacity={maxCapacity} isCreator={isCreator}>
+            {children}
+          </RoomContent>
         </ClientSideSuspense>
       </RoomProvider>
     </LiveblocksProvider>

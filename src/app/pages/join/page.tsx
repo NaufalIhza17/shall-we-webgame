@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import QuickChoose from "../games/quick-choose/page";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -22,7 +21,7 @@ export default function JoinPage() {
       setNickname(storedNickname);
       setJoined(true);
     }
-  }, []);
+  }, [setNickname, setRoomId, setJoined]);
 
   const handleJoinRoom = () => {
     if (nickname.trim() !== "" && roomId.trim() !== "") {
@@ -31,22 +30,22 @@ export default function JoinPage() {
     }
   };
 
-  const handleRedirect = () => {
+  const handleRedirect = useCallback(() => {
     const query = new URLSearchParams({
       roomId,
       nickname
     }).toString();
 
     if (joined && roomId) {
-      router.push(`/games/quick-choose?${query}`);
+      router.push(`/pages/games/quick-choose?${query}`);
     }
-  };
+  }, [joined, roomId, nickname, router]);
 
   useEffect(() => {
     if (joined && roomId) {
       handleRedirect();
     }
-  }, [joined, roomId]);
+  }, [joined, roomId, handleRedirect]);
 
   return (
     <div className="flex flex-col gap-10 justify-between h-full w-full">
