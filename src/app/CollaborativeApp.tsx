@@ -105,7 +105,6 @@ export function CollaborativeApp({ roomId }: CollaborativeAppProps) {
             key={self.connectionId}
             className="flex items-center gap-2 px-2 py-1 bg-white/50 rounded-full border border-white"
           >
-            <div className="h-6 w-6 rounded-full bg-white"></div>
             <p>{self.presence?.nickname} (You)</p>
           </li>
         )}
@@ -115,7 +114,6 @@ export function CollaborativeApp({ roomId }: CollaborativeAppProps) {
             key={other.connectionId}
             className="flex items-center gap-2 px-2 py-1 bg-white/50 rounded-full border border-white"
           >
-            <div className="h-6 w-6 rounded-full bg-white"></div>
             <p>{other.presence?.nickname || "Unknown User"}</p>
           </li>
         ))}

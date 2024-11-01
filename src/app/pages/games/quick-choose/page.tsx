@@ -3,8 +3,17 @@
 import { Room } from "@/app/Room";
 import { CollaborativeApp } from "@/app/CollaborativeApp";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function QuickChoose() {
+export default function QuickChooseWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <QuickChoose />
+    </Suspense>
+  );
+}
+
+function QuickChoose() {
   const searchParams = useSearchParams();
 
   const roomId = searchParams.get("roomId");
@@ -15,6 +24,7 @@ export default function QuickChoose() {
   if (!roomId || !nickname) {
     return <div>Missing room information</div>;
   }
+
   return (
     <Room
       roomId={roomId}
